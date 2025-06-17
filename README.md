@@ -87,13 +87,13 @@ Fetching anime information...
 
 ### One-Line Installation
 ```bash
-curl -sL https://raw.githubusercontent.com/yourusername/ani-cli-ultimate/main/install.sh | bash
+curl -sL https://raw.githubusercontent.com/SetFodi/ani-cli-ultimate/main/install.sh | bash
 ```
 
 ### Manual Installation
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ani-cli-ultimate.git
+git clone https://github.com/SetFodi/ani-cli-ultimate.git
 cd ani-cli-ultimate
 
 # Run the installer
