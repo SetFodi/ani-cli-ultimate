@@ -1,0 +1,255 @@
+#!/bin/bash
+
+# 🎌 ANI-CLI ULTIMATE 🎌
+# Enhanced anime streaming with visual flair
+# Made by Andromeda ✨
+
+set -euo pipefail
+
+# Colors and effects
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;95m'
+BOLD='\033[1m'
+DIM='\033[2m'
+RESET='\033[0m'
+BLINK='\033[5m'
+
+# Configuration
+CACHE_DIR="$HOME/.cache/ani-ultimate"
+POSTER_CACHE="$CACHE_DIR/posters"
+mkdir -p "$CACHE_DIR" "$POSTER_CACHE"
+
+# Animated banner with effects
+print_animated_banner() {
+    clear
+    echo -e "${PURPLE}${BOLD}"
+    echo "     ╔═══════════════════════════════════════════════════════════╗"
+    echo "     ║                 🎌 ANI-CLI ULTIMATE 🎌                   ║"
+    echo "     ║            ${CYAN}✨ Enhanced Visual Experience ✨${PURPLE}            ║"
+    echo "     ╚═══════════════════════════════════════════════════════════╝"
+    echo -e "${RESET}"
+    
+    # Loading animation
+    echo -e "${CYAN}${BOLD}🚀 Initializing Ultimate Anime Experience...${RESET}"
+    for i in {1..3}; do
+        echo -ne "${YELLOW}▓"
+        sleep 0.1
+    done
+    echo -e "${GREEN} Ready!${RESET}"
+    echo ""
+}
+
+# Fancy loading spinner
+show_spinner() {
+    local pid=$1
+    local delay=0.1
+    local spinstr='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+        local temp=${spinstr#?}
+        printf " [%c]  " "$spinstr"
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\b\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
+}
+
+# Enhanced poster display with animations
+display_enhanced_poster() {
+    local anime_title="$1"
+    local poster_url="$2"
+    
+    if [[ -z "$poster_url" || "$poster_url" == "null" ]]; then
+        return 1
+    fi
+    
+    local cache_file="$POSTER_CACHE/$(echo "$anime_title" | sed 's/[^a-zA-Z0-9]/_/g').jpg"
+    
+    # Download with fancy progress
+    if [[ ! -f "$cache_file" ]]; then
+        echo -e "${CYAN}📥 ${BOLD}Downloading poster for ${YELLOW}$anime_title${RESET}${CYAN}...${RESET}"
+        curl -s -L "$poster_url" -o "$cache_file" 2>/dev/null &
+        show_spinner $!
+        echo -e "${GREEN}✅ Poster ready!${RESET}"
+    fi
+    
+    # Display with enhanced chafa and border
+    if [[ -f "$cache_file" ]] && command -v chafa >/dev/null 2>&1; then
+        echo -e "${PURPLE}╭─────────────────────────────────────────────╮${RESET}"
+        echo -e "${PURPLE}│${CYAN}${BOLD}           🎌 ANIME POSTER 🎌              ${PURPLE}│${RESET}"
+        echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
+        
+        chafa "$cache_file" \
+            --size="50x28" \
+            --format=symbols \
+            --symbols=block+space+solid+stipple+braille \
+            --fill=space \
+            --dither=ordered \
+            --color-extractor=average \
+            --color-space=rgb \
+            --work=9 \
+            --optimize=9 \
+            --polite=off \
+            --threshold=0.5 2>/dev/null
+        
+        echo -e "${PURPLE}╭─────────────────────────────────────────────╮${RESET}"
+        echo -e "${PURPLE}│${DIM}              Made by Andromeda ✨           ${PURPLE}│${RESET}"
+        echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
+        echo ""
+        return 0
+    fi
+    
+    return 1
+}
+
+# Get anime info from API
+get_anime_info() {
+    local query="$1"
+    local encoded_query=$(echo "$query" | sed 's/ /%20/g')
+    local url="https://api.jikan.moe/v4/anime?q=$encoded_query&limit=5"
+    
+    curl -s "$url" 2>/dev/null || echo ""
+}
+
+# Enhanced anime search with poster integration
+enhanced_anime_search() {
+    local query="$1"
+    
+    print_animated_banner
+    
+    echo -e "${CYAN}${BOLD}🔍 Searching for: ${YELLOW}\"$query\"${RESET}"
+    echo -e "${DIM}Fetching anime information...${RESET}"
+    
+    # Get anime info for poster
+    local response=$(get_anime_info "$query")
+    local poster_url=""
+    local anime_title=""
+    
+    if [[ -n "$response" ]] && echo "$response" | jq -e '.data[0]' >/dev/null 2>&1; then
+        poster_url=$(echo "$response" | jq -r '.data[0].images.jpg.large_image_url')
+        anime_title=$(echo "$response" | jq -r '.data[0].title')
+        local score=$(echo "$response" | jq -r '.data[0].score // 0')
+        local year=$(echo "$response" | jq -r '.data[0].year // "N/A"')
+        
+        echo ""
+        echo -e "${GREEN}${BOLD}✨ Found: ${CYAN}$anime_title${RESET}"
+        echo -e "${YELLOW}⭐ Score: ${GREEN}$score${RESET} | ${YELLOW}📅 Year: ${GREEN}$year${RESET}"
+        echo ""
+        
+        # Show poster in background while ani-cli loads
+        if [[ "$poster_url" != "null" && -n "$poster_url" ]]; then
+            (display_enhanced_poster "$anime_title" "$poster_url") &
+            poster_pid=$!
+        fi
+    fi
+    
+    echo -e "${PURPLE}${BOLD}╭─────────────────────────────────────────────╮${RESET}"
+    echo -e "${PURPLE}${BOLD}│${CYAN}          🎌 LAUNCHING ANI-CLI 🎌           ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}${BOLD}╰─────────────────────────────────────────────╯${RESET}"
+    echo ""
+    
+    # Wait for poster to finish if it was started
+    if [[ -n "${poster_pid:-}" ]]; then
+        wait $poster_pid 2>/dev/null || true
+    fi
+    
+    echo -e "${CYAN}${BOLD}🎮 Select your anime version:${RESET}"
+    echo -e "${DIM}Use ↑/↓ arrows and Enter to select${RESET}"
+    echo ""
+    
+    # Launch ani-cli with enhanced environment
+    export FZF_DEFAULT_OPTS="--height=70% --border=rounded --margin=1 --padding=1 --color='fg:#bd93f9,bg:#282a36,hl:#ff79c6,fg+:#f8f8f2,bg+:#44475a,hl+:#ff79c6,info:#8be9fd,prompt:#50fa7b,pointer:#ff79c6,marker:#ff79c6,spinner:#ffb86c,header:#6272a4' --prompt='🎌 Select anime: ' --header='🎌 ANI-CLI ULTIMATE - Enhanced by Andromeda ✨'"
+    
+    ani-cli "$query"
+    
+    # Footer with credits
+    echo ""
+    echo -e "${PURPLE}╭─────────────────────────────────────────────╮${RESET}"
+    echo -e "${PURPLE}│${CYAN}${BOLD}            🎌 ANI-CLI ULTIMATE 🎌           ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${DIM}              Made by Andromeda ✨           ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${DIM}        Enhanced Visual Anime Experience     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
+}
+
+# Show enhanced help
+show_help() {
+    print_animated_banner
+    
+    echo -e "${CYAN}${BOLD}📖 USAGE:${RESET}"
+    echo -e "  ${GREEN}ani${RESET} ${YELLOW}\"<search_query>\"${RESET}"
+    echo ""
+    
+    echo -e "${CYAN}${BOLD}🎌 EXAMPLES:${RESET}"
+    echo -e "  ${GREEN}ani${RESET} ${YELLOW}\"death note\"${RESET}"
+    echo -e "  ${GREEN}ani${RESET} ${YELLOW}\"attack on titan\"${RESET}"
+    echo -e "  ${GREEN}ani${RESET} ${YELLOW}\"demon slayer\"${RESET}"
+    echo -e "  ${GREEN}ani${RESET} ${YELLOW}\"one piece\"${RESET}"
+    echo ""
+    
+    echo -e "${CYAN}${BOLD}✨ ENHANCED FEATURES:${RESET}"
+    echo -e "  🎨 ${GREEN}Beautiful anime posters${RESET}"
+    echo -e "  🌈 ${GREEN}Enhanced visual interface${RESET}"
+    echo -e "  ⚡ ${GREEN}Smooth animations & transitions${RESET}"
+    echo -e "  🎭 ${GREEN}Custom fzf styling${RESET}"
+    echo -e "  📊 ${GREEN}Anime ratings & info${RESET}"
+    echo -e "  🚀 ${GREEN}Direct ani-cli integration${RESET}"
+    echo ""
+    
+    echo -e "${CYAN}${BOLD}🎮 CONTROLS:${RESET}"
+    echo -e "  ${YELLOW}↑/↓${RESET} - Navigate options"
+    echo -e "  ${YELLOW}Enter${RESET} - Select anime"
+    echo -e "  ${YELLOW}Esc${RESET} - Cancel/Exit"
+    echo -e "  ${YELLOW}Tab${RESET} - Multi-select (if supported)"
+    echo ""
+    
+    echo -e "${PURPLE}╭─────────────────────────────────────────────╮${RESET}"
+    echo -e "${PURPLE}│${CYAN}${BOLD}            🎌 ANI-CLI ULTIMATE 🎌           ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${DIM}              Made by Andromeda ✨           ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${DIM}        Enhanced Visual Anime Experience     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
+}
+
+# Main function
+main() {
+    # Check dependencies
+    local missing_deps=()
+    
+    if ! command -v ani-cli >/dev/null 2>&1; then
+        missing_deps+=("ani-cli")
+    fi
+    
+    if ! command -v jq >/dev/null 2>&1; then
+        missing_deps+=("jq")
+    fi
+    
+    if ! command -v curl >/dev/null 2>&1; then
+        missing_deps+=("curl")
+    fi
+    
+    if [[ ${#missing_deps[@]} -gt 0 ]]; then
+        echo -e "${RED}${BOLD}❌ Missing dependencies:${RESET}"
+        for dep in "${missing_deps[@]}"; do
+            echo -e "  ${YELLOW}$dep${RESET}"
+        done
+        echo ""
+        echo -e "${CYAN}Install with:${RESET}"
+        echo -e "  ${GREEN}brew install ${missing_deps[*]}${RESET}"
+        exit 1
+    fi
+    
+    case "${1:-}" in
+        "--help"|"-h"|"")
+            show_help
+            ;;
+        *)
+            enhanced_anime_search "$1"
+            ;;
+    esac
+}
+
+main "$@" 
