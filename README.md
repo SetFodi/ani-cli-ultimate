@@ -68,7 +68,7 @@ This repository contains **enhancements to the actual ani-cli script** with smoo
 ### Automated Installation (Recommended)
 ```bash
 # Clone this repository
-git clone https://github.com/yourusername/anicli-enhanced.git
+git clone https://github.com/SetFodi/ani-cli-ultimate.git
 cd anicli-enhanced
 
 # Run the installer
@@ -114,7 +114,7 @@ cp enhanced-ani-cli /path/to/ani-cli
 ### Automated Installation (Recommended)
 ```powershell
 # Clone this repository
-git clone https://github.com/yourusername/anicli-enhanced.git
+git clone https://github.com/SetFodi/ani-cli-ultimate.git
 cd anicli-enhanced
 
 # Run the PowerShell installer
