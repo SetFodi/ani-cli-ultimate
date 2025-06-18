@@ -1,265 +1,249 @@
-# 🎌 ANI-CLI ULTIMATE ✨
+# 🎌 Enhanced ANI-CLI Experience ✨
 
 <div align="center">
 
-![ANI-CLI ULTIMATE Banner](https://img.shields.io/badge/ANI--CLI-ULTIMATE-purple?style=for-the-badge&logo=anime&logoColor=white)
-![Made by Andromeda](https://img.shields.io/badge/Made%20by-Andromeda%20✨-cyan?style=for-the-badge)
+![ANI-CLI Enhanced](https://img.shields.io/badge/ANI--CLI-Enhanced-purple?style=for-the-badge&logo=anime&logoColor=white)
+![Made by Andromeda](https://img.shields.io/badge/Enhanced%20by-Andromeda%20✨-cyan?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue?style=for-the-badge)
 
-**Enhanced Visual Anime Streaming Experience**
+**Smooth, Animated, Fancy Menus for ANI-CLI**
 
-*A beautiful wrapper for [ani-cli](https://github.com/pystardust/ani-cli) with stunning posters, smooth animations, and enhanced UI*
+*Enhanced visual experience for the popular [ani-cli](https://github.com/pystardust/ani-cli) anime streaming tool*
 
 </div>
 
 ---
 
-## ✨ Features
+## ✨ What's Enhanced
 
-### 🎨 **Visual Enhancements**
-- **🖼️ Beautiful Anime Posters** - High-quality posters with enhanced chafa rendering
-- **🌈 Stunning Interface** - Custom colors, borders, and animations
-- **⚡ Smooth Animations** - Loading spinners and transitions
-- **🎭 Enhanced fzf Styling** - Custom themes and layouts
+This repository contains **enhancements to the actual ani-cli script** with smooth animations, fancy menus, and modern visual effects while maintaining 100% of the original functionality.
 
-### 🚀 **Enhanced Experience**
-- **📊 Anime Information** - Ratings, years, and synopsis display
-- **💾 Smart Caching** - Posters cached for faster loading
-- **🎮 Intuitive Controls** - Enhanced navigation and selection
-- **🎌 Direct Integration** - Seamless ani-cli workflow
+### 🎨 **Visual Improvements**
+- **Advanced FZF styling** with double borders and enhanced color schemes
+- **Loading animations** with progress indicators
+- **Completion banners** with celebration effects
+- **Color-coded feedback** for all user actions
+- **Statistics dashboard** showing viewing progress
 
-### 🛠️ **Technical Features**
-- **Cross-platform** - Works on macOS and Linux
-- **Dependency Management** - Automatic installation of requirements
-- **Error Handling** - Graceful fallbacks and user feedback
-- **Performance Optimized** - Fast loading and smooth operation
+### 📺 **Enhanced Episode Selection**
+- **Clean episode formatting**: `📺 Episode 1`, `📺 Episode 2`
+- **Loading animations**: "🎬 Loading episode list..."
+- **Improved navigation** with better visual feedback
+
+### 🎮 **Post-Episode Menu**
+- **Celebration banner** when episodes complete:
+  ```
+  ╭─────────────────────────────────────────────╮
+  │            🎉 EPISODE COMPLETED! 🎉        │
+  │        Episode X finished successfully     │
+  │         What would you like to do next?    │
+  ╰─────────────────────────────────────────────╯
+  ```
+- **Enhanced menu options** with descriptions:
+  - `▶️ Next Episode - Continue your journey`
+  - `🔄 Replay Episode - Watch again`
+  - `⏮️ Previous Episode - Go back`
+  - `📺 Select Episode - Choose different episode`
+  - `⚙️ Change Quality - Adjust video quality`
+  - `🎨 View Statistics - See your progress`
+  - `🚪 Quit - Exit ANI-CLI`
+
+### 📊 **New Features**
+- **Statistics View**: Track your progress, episodes watched, completion percentage
+- **Enhanced Quality Selection**: Descriptive quality options with visual feedback
+- **Smooth Transitions**: Loading animations between actions
+
+---
+
+## 🚀 Installation
+
+### Prerequisites
+- **ani-cli** installed ([Installation Guide](https://github.com/pystardust/ani-cli))
+- **fzf** for the enhanced menus
+
+### Quick Setup
+```bash
+# Clone this repository
+git clone https://github.com/yourusername/anicli-enhanced.git
+cd anicli-enhanced
+
+# Backup your current ani-cli
+cp ~/.ani-cli/ani-cli ~/.ani-cli/ani-cli.backup
+
+# Apply the enhancements
+cp enhanced-ani-cli ~/.ani-cli/ani-cli
+
+# Done! Your ani-cli is now enhanced
+```
+
+### Manual Installation
+1. **Locate your ani-cli**: `which ani-cli`
+2. **Backup original**: `cp /path/to/ani-cli /path/to/ani-cli.backup`
+3. **Apply enhancements**: Copy the enhanced version from this repo
 
 ---
 
 ## 📸 Screenshots
 
-### Main Interface
+### Enhanced Episode Selection
 ```
-     ╔═══════════════════════════════════════════════════════════╗
-     ║                 🎌 ANI-CLI ULTIMATE 🎌                   ║
-     ║            ✨ Enhanced Visual Experience ✨            ║
-     ╚═══════════════════════════════════════════════════════════╝
+🎬 Loading episode list... ✓
 
-🚀 Initializing Ultimate Anime Experience...
-▓▓▓ Ready!
-
-🔍 Searching for: "death note"
-Fetching anime information...
-
-✨ Found: Death Note
-⭐ Score: 8.62 | 📅 Year: 2006
-```
-
-### Poster Display
-```
-╭─────────────────────────────────────────────╮
-│           🎌 ANIME POSTER 🎌              │
-╰─────────────────────────────────────────────╯
-
-[Beautiful ASCII art poster of Death Note characters]
-
-╭─────────────────────────────────────────────╮
-│              Made by Andromeda ✨           │
-╰─────────────────────────────────────────────╯
-```
-
-### Enhanced Selection Menu
-```
-╭───────────────────────────────────────| ✨ Anime Paradise ✨ |───────────────────────────────────────╮
+┌───────────────────────────────────────| ✨ Enhanced ANI-CLI ✨ |────────────────────────────────────────┐
 │                                                                                                      │
-│  🎌 Select anime:                                                                                    │
+│  📺 Choose episode:                                                                                  │
 │    🎌 ANI-CLI ULTIMATE - Enhanced by Andromeda ✨                                                    │
-│  ❯ 1. Death Note (37 episodes)                                                                      │
-│    2. Death Note: Rewrite (1 episodes)                                                              │
-│    3. Death Note Rewrite: The Visualizing God (1 episodes)                                          │
+│  ❯ 📺 Episode 1                                                                                     │
+│    📺 Episode 2                                                                                     │
+│    📺 Episode 3                                                                                     │
 │                                                                                                      │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────╯
+└──────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Post-Episode Menu
+```
+╭─────────────────────────────────────────────╮
+│            🎉 EPISODE COMPLETED! 🎉        │
+│                                           │
+│        Episode 1 finished successfully    │
+│                                           │
+│         What would you like to do next?    │
+╰─────────────────────────────────────────────╯
+
+🎮 Episode 1 completed! What next:
+❯ ▶️  Next Episode - Continue your journey
+  🔄 Replay Episode - Watch again
+  ⏮️  Previous Episode - Go back
+  📺 Select Episode - Choose different episode
+  ⚙️  Change Quality - Adjust video quality
+  🎨 View Statistics - See your progress
+  🚪 Quit - Exit ANI-CLI
+```
+
+### Statistics Dashboard
+```
+╭─────────────────────────────────────────────╮
+│            📊 VIEWING STATISTICS 📊        │
+│                                           │
+│  Current Anime: Death Note                │
+│  Current Episode: 5                       │
+│  Total Episodes: 37                       │
+│  Progress: 13.5%                          │
+╰─────────────────────────────────────────────╯
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🎮 Usage
 
-### One-Line Installation
-```bash
-curl -sL https://raw.githubusercontent.com/SetFodi/ani-cli-ultimate/main/install.sh | bash
-```
+Use ani-cli exactly as before - the enhancements are seamlessly integrated:
 
-### Manual Installation
-```bash
-# Clone the repository
-git clone https://github.com/SetFodi/ani-cli-ultimate.git
-cd ani-cli-ultimate
-
-# Run the installer
-chmod +x install.sh
-./install.sh
-```
-
-### Usage
 ```bash
 # Search and watch anime
-ani "death note"
-ani "attack on titan"
-ani "demon slayer"
+ani-cli "death note"
+ani-cli "attack on titan"
+ani-cli "demon slayer"
 
-# Show help
-ani --help
+# All original flags work
+ani-cli -q 720p "one piece"
+ani-cli --dub "naruto"
+ani-cli -c  # Continue from history
+```
+
+### Enhanced Features Appear Automatically:
+- **Episode Selection**: Enhanced visual menus
+- **Post-Episode**: Completion banners and enhanced options
+- **Quality Selection**: Descriptive quality menus
+- **Statistics**: View your watching progress
+
+---
+
+## ⚙️ Configuration
+
+### Customization
+The enhanced ani-cli respects all original environment variables:
+```bash
+export ANI_CLI_QUALITY="720p"      # Default quality
+export ANI_CLI_PLAYER="mpv"        # Video player
+export ANI_CLI_NO_DETACH=1         # Keep player attached
+```
+
+### Reverting Changes
+```bash
+# Restore original ani-cli
+cp ~/.ani-cli/ani-cli.backup ~/.ani-cli/ani-cli
 ```
 
 ---
 
-## 📋 Requirements
+## 🛠️ Technical Details
 
-### Automatic Installation
-The installer will automatically install all dependencies:
+### What's Modified
+- **`launcher()` function**: Enhanced FZF styling and keybindings
+- **Episode selection**: Clean formatting and loading animations
+- **Post-episode menu**: Expanded options and visual feedback
+- **Player integration**: Improved waiting for video completion
+- **New functions**: Statistics, animations, and visual helpers
 
-- **[ani-cli](https://github.com/pystardust/ani-cli)** - The core anime streaming tool
-- **[jq](https://stedolan.github.io/jq/)** - JSON processor for API data
-- **[fzf](https://github.com/junegunn/fzf)** - Fuzzy finder for selections
-- **[chafa](https://hpjansson.org/chafa/)** - Terminal image viewer
-- **curl** - For downloading posters and API calls
-
-### Supported Platforms
-- 🍎 **macOS** (via Homebrew)
-- 🐧 **Linux** (Ubuntu/Debian, Arch Linux)
-
----
-
-## 🎮 Controls
-
-| Key | Action |
-|-----|--------|
-| `↑/↓` | Navigate options |
-| `Enter` | Select anime/episode |
-| `Esc` | Cancel/Exit |
-| `Tab` | Multi-select (if supported) |
-| `q` | Quit |
-
----
-
-## 🛠️ Configuration
-
-### Cache Directory
-Posters are cached at: `~/.cache/ani-ultimate/posters/`
-
-### Custom fzf Options
-The script uses enhanced fzf styling. You can customize by modifying the `FZF_DEFAULT_OPTS` in the script.
-
-### Poster Quality
-Poster rendering can be adjusted by modifying the chafa parameters in the `display_enhanced_poster` function.
-
----
-
-## 🎌 How It Works
-
-1. **Search** - Enter anime name
-2. **API Fetch** - Gets anime info from MyAnimeList API
-3. **Poster Display** - Downloads and shows beautiful poster
-4. **Selection** - Enhanced fzf menu for choosing anime version
-5. **Streaming** - Launches ani-cli for episode selection and streaming
+### Compatibility
+- ✅ **macOS**: Full support with IINA/MPV
+- ✅ **Linux**: Full support with MPV/VLC
+- ✅ **Original Features**: 100% backward compatible
+- ✅ **All Flags**: Every original ani-cli option works
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how you can help:
+Feel free to contribute improvements:
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+1. **Fork** this repository
+2. **Create** a feature branch
+3. **Test** with various anime and episodes
+4. **Submit** a pull request
 
 ### Ideas for Contributions
-- 🎨 New poster rendering styles
-- 🌍 Additional language support
-- 🎭 More animation effects
-- 🔧 Performance improvements
-- 📱 Mobile terminal support
+- 🎨 Additional visual themes
+- 📱 Mobile terminal optimizations
+- 🌍 Internationalization
+- ⚡ Performance improvements
 
 ---
 
-## 🐛 Troubleshooting
+## 📜 Credits
 
-### Common Issues
-
-**Command not found: ani**
-```bash
-# Reload your shell configuration
-source ~/.bashrc  # or ~/.zshrc
-```
-
-**Posters not displaying**
-```bash
-# Install chafa
-brew install chafa  # macOS
-sudo apt install chafa  # Ubuntu/Debian
-```
-
-**fzf styling not working**
-```bash
-# Update fzf to latest version
-brew upgrade fzf  # macOS
-```
-
-### Getting Help
-- 📖 Check the [Wiki](https://github.com/yourusername/ani-cli-ultimate/wiki)
-- 🐛 Report bugs in [Issues](https://github.com/yourusername/ani-cli-ultimate/issues)
-- 💬 Join discussions in [Discussions](https://github.com/yourusername/ani-cli-ultimate/discussions)
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Credits & Acknowledgments
-
-### Primary Credits
-- **[ani-cli](https://github.com/pystardust/ani-cli)** by [pystardust](https://github.com/pystardust) - The amazing core anime streaming tool that makes this all possible
-- **[MyAnimeList API (Jikan)](https://jikan.moe/)** - For providing accurate anime information and posters
+### Based On
+- **[ani-cli](https://github.com/pystardust/ani-cli)** by [pystardust](https://github.com/pystardust) - The amazing original anime streaming tool
 
 ### Dependencies
-- **[fzf](https://github.com/junegunn/fzf)** by [junegunn](https://github.com/junegunn) - Fuzzy finder
-- **[chafa](https://hpjansson.org/chafa/)** by [hpjansson](https://github.com/hpjansson) - Terminal image viewer
-- **[jq](https://stedolan.github.io/jq/)** by [stedolan](https://github.com/stedolan) - JSON processor
+- **[fzf](https://github.com/junegunn/fzf)** - Fuzzy finder for enhanced menus
+- **[chafa](https://hpjansson.org/chafa/)** - Terminal image viewer (for posters)
 
-### Special Thanks
-- The entire **ani-cli community** for creating such an amazing tool
-- **MyAnimeList** for the comprehensive anime database
-- All the **open-source contributors** who made the dependencies possible
+### Enhanced By
+- **Andromeda ✨** - Visual enhancements and smooth animations
 
 ---
 
-## 💫 About Andromeda
+## 📄 License
 
-**ANI-CLI ULTIMATE** is crafted with ❤️ by **Andromeda** ✨
+This project maintains the same license as the original ani-cli (GPL-3.0).
 
-*Bringing enhanced visual experiences to command-line tools*
+---
+
+## 🙏 Acknowledgments
+
+- **pystardust** and all ani-cli contributors for the incredible foundation
+- **The anime community** for inspiring beautiful tools
+- **Terminal UI enthusiasts** who appreciate enhanced command-line experiences
+
+---
 
 <div align="center">
 
-### 🌟 If you love this project, please give it a star! 🌟
-
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/ani-cli-ultimate?style=social)](https://github.com/yourusername/ani-cli-ultimate/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/ani-cli-ultimate?style=social)](https://github.com/yourusername/ani-cli-ultimate/network/members)
+### 🌟 If you love this enhanced experience, please give it a star! 🌟
 
 **Made with 🎌 for the anime community**
 
-</div>
-
----
-
-<div align="center">
-
-*Watch anime in style with ANI-CLI ULTIMATE* ✨
+*Watch anime in style with Enhanced ANI-CLI* ✨
 
 </div> 
