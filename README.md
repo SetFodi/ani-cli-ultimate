@@ -4,7 +4,7 @@
 
 ![ANI-CLI Enhanced](https://img.shields.io/badge/ANI--CLI-Enhanced-purple?style=for-the-badge&logo=anime&logoColor=white)
 ![Made by Andromeda](https://img.shields.io/badge/Enhanced%20by-Andromeda%20✨-cyan?style=for-the-badge)
-![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux-blue?style=for-the-badge)
+![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux%20%7C%20Windows-blue?style=for-the-badge)
 
 **Smooth, Animated, Fancy Menus for ANI-CLI**
 
@@ -61,25 +61,84 @@ This repository contains **enhancements to the actual ani-cli script** with smoo
 - **ani-cli** installed ([Installation Guide](https://github.com/pystardust/ani-cli))
 - **fzf** for the enhanced menus
 
-### Quick Setup
+---
+
+## 🖥️ **UNIX/Linux/macOS Installation**
+
+### Automated Installation (Recommended)
 ```bash
 # Clone this repository
 git clone https://github.com/yourusername/anicli-enhanced.git
 cd anicli-enhanced
 
-# Backup your current ani-cli
-cp ~/.ani-cli/ani-cli ~/.ani-cli/ani-cli.backup
-
-# Apply the enhancements
-cp enhanced-ani-cli ~/.ani-cli/ani-cli
-
-# Done! Your ani-cli is now enhanced
+# Run the installer
+chmod +x install.sh
+./install.sh
 ```
 
 ### Manual Installation
-1. **Locate your ani-cli**: `which ani-cli`
-2. **Backup original**: `cp /path/to/ani-cli /path/to/ani-cli.backup`
-3. **Apply enhancements**: Copy the enhanced version from this repo
+```bash
+# Locate your ani-cli
+which ani-cli
+
+# Backup original
+cp /path/to/ani-cli /path/to/ani-cli.backup
+
+# Apply enhancements
+cp enhanced-ani-cli /path/to/ani-cli
+```
+
+---
+
+## 🪟 **Windows Installation (PowerShell)**
+
+### Prerequisites for Windows
+1. **Install ani-cli** first:
+   ```powershell
+   # Option 1: Via Scoop (Recommended)
+   scoop bucket add extras
+   scoop install ani-cli
+   
+   # Option 2: Download from GitHub
+   # Download from: https://github.com/pystardust/ani-cli
+   ```
+
+2. **Install FZF** for enhanced menus:
+   ```powershell
+   # Via Scoop
+   scoop install fzf
+   
+   # Or download from: https://github.com/junegunn/fzf
+   ```
+
+### Automated Installation (Recommended)
+```powershell
+# Clone this repository
+git clone https://github.com/yourusername/anicli-enhanced.git
+cd anicli-enhanced
+
+# Run the PowerShell installer
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+.\install.ps1
+```
+
+### Manual Windows Installation
+```powershell
+# Find your ani-cli location
+Get-Command ani-cli
+
+# Backup original
+Copy-Item "C:\path\to\ani-cli" "C:\path\to\ani-cli.backup"
+
+# Apply enhancements
+Copy-Item "enhanced-ani-cli" "C:\path\to\ani-cli"
+```
+
+### Windows Notes
+- **Run PowerShell as Administrator** if you encounter permission errors
+- **Enable execution policy** if scripts are blocked: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
+- **Terminal recommendations**: Windows Terminal or PowerShell 7 for best emoji/color support
+- **Media player**: Install **mpv** or **VLC** for optimal playback
 
 ---
 
@@ -187,7 +246,8 @@ cp ~/.ani-cli/ani-cli.backup ~/.ani-cli/ani-cli
 
 ### Compatibility
 - ✅ **macOS**: Full support with IINA/MPV
-- ✅ **Linux**: Full support with MPV/VLC
+- ✅ **Linux**: Full support with MPV/VLC  
+- ✅ **Windows**: Full support with MPV/VLC via PowerShell
 - ✅ **Original Features**: 100% backward compatible
 - ✅ **All Flags**: Every original ani-cli option works
 
