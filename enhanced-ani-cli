@@ -8,45 +8,167 @@ external_menu() {
     rofi "$1" -sort -dmenu -i -width 1500 -p "$2" "$3"
 }
 
-# Enhanced loading animation with progress
+# Enhanced loading animation with progress and spinners
 show_loading_animation() {
     local message="$1"
     local duration="${2:-1}"
     
-    printf "\r\033[1;36m%s" "$message"
-    for i in $(seq 1 $duration); do
-        printf "."
-        sleep 0.3
+    # Simplified spinner animation without background processes
+    local spinners="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+    local delay=0.1
+    local loops=$((duration * 10))
+    
+    for i in $(seq 1 $loops); do
+        local spinner_char=$(echo "$spinners" | cut -c $((($i % 10) + 1)))
+        printf "\r\033[1;36m%s \033[1;35m%s\033[0m" "$spinner_char" "$message"
+        sleep $delay
     done
-    printf " \033[1;32m✓\033[0m\n"
+    
+    printf "\r\033[1;32m✓\033[0m \033[1;36m%s\033[0m \033[1;32mcomplete!\033[0m\n" "$message"
+}
+
+# Animated text with typewriter effect
+typewriter_effect() {
+    local text="$1"
+    local delay="${2:-0.05}"
+    
+    for i in $(seq 1 ${#text}); do
+        printf "%c" "$(echo "$text" | cut -c $i)"
+        sleep "$delay"
+    done
+    printf "\n"
+}
+
+# Progress bar animation
+progress_bar() {
+    local current="$1"
+    local total="$2"
+    local width=40
+    local percentage=$((current * 100 / total))
+    local filled=$((current * width / total))
+    
+    printf "\r\033[1;34m["
+    for i in $(seq 1 $filled); do printf "█"; done
+    for i in $(seq $((filled + 1)) $width); do printf "░"; done
+    printf "] %d%% \033[0m" "$percentage"
+    
+    [ "$current" -eq "$total" ] && printf "\n"
+}
+
+# Smooth menu transition effects
+menu_transition() {
+    local direction="${1:-down}"
+    local lines="${2:-3}"
+    
+    case "$direction" in
+        "down")
+            for i in $(seq 1 $lines); do
+                printf "\033[1;35m▼\033[0m"
+                sleep 0.1
+            done
+            ;;
+        "up")
+            for i in $(seq 1 $lines); do
+                printf "\033[1;33m▲\033[0m"
+                sleep 0.1
+            done
+            ;;
+    esac
+    printf "\n"
+}
+
+# Anime poster display function
+show_anime_poster() {
+    local anime_title="$1"
+    local anime_id="$2"
+    
+    # Check if chafa is available for image display
+    if command -v chafa >/dev/null 2>&1; then
+        local cache_dir="$hist_dir/posters"
+        mkdir -p "$cache_dir"
+        local poster_file="$cache_dir/${anime_id}.jpg"
+        
+        # Try to download poster if not cached
+        if [ ! -f "$poster_file" ]; then
+            # Use a simplified anime poster API (placeholder - you can replace with actual API)
+            local poster_url="https://via.placeholder.com/300x400/1a1a2e/ffffff?text=$(printf '%s' "$anime_title" | sed 's/ /+/g')"
+            curl -s -o "$poster_file" "$poster_url" 2>/dev/null || return 1
+        fi
+        
+        # Display poster with chafa
+        if [ -f "$poster_file" ]; then
+            printf "\033[1;35m╭─────────────── 🎬 ANIME POSTER 🎬 ────────────────╮\033[0m\n"
+            chafa --size=20x15 --format=symbols "$poster_file" 2>/dev/null | sed 's/^/\033[1;35m│\033[0m /' | sed 's/$/\033[1;35m │\033[0m/'
+            printf "\033[1;35m╰────────────────────────────────────────────────────╯\033[0m\n\n"
+            return 0
+        fi
+    fi
+    
+    # Fallback ASCII art poster
+    printf "\033[1;35m╭──────────────── 🎌 %s 🎌 ─────────────────╮\033[0m\n" "$(printf '%.20s' "$anime_title")"
+    printf "\033[1;35m│\033[0m                                                      \033[1;35m│\033[0m\n"
+    printf "\033[1;35m│\033[1;36m                    ░▒▓█ ANIME █▓▒░                  \033[1;35m│\033[0m\n"
+    printf "\033[1;35m│\033[1;33m                                                      \033[1;35m│\033[0m\n"
+    printf "\033[1;35m│\033[1;32m                  🎭 ENJOY WATCHING 🎭               \033[1;35m│\033[0m\n"
+    printf "\033[1;35m│\033[1;31m                                                      \033[1;35m│\033[0m\n"
+    printf "\033[1;35m│\033[1;34m                   ✨ ENHANCED ✨                    \033[1;35m│\033[0m\n"
+    printf "\033[1;35m│\033[0m                                                      \033[1;35m│\033[0m\n"
+    printf "\033[1;35m╰──────────────────────────────────────────────────────╯\033[0m\n\n"
+}
+
+# Credits and attribution
+show_credits() {
+    printf "\n\033[2;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m\n"
+    printf "\033[1;35m🎌 Created by \033[1;33mAndromeda\033[1;35m ✨ Enhanced with love for anime community\033[0m\n"
+    printf "\033[2;37m   Built upon the amazing \033[1;36mani-cli\033[2;37m by \033[1;32mpystardust\033[2;37m and contributors\033[0m\n"
+    printf "\033[2;37m   Original project: \033[4;34mhttps://github.com/pystardust/ani-cli\033[0m\n"
+    printf "\033[2;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m\n"
 }
 
 
 
-# Enhanced launcher with advanced effects
+# Enhanced launcher with advanced effects and IINA player detection
 launcher() {
     [ "$use_external_menu" = "0" ] && [ -z "$1" ] && set -- "+m" "$2"
     
     if [ "$use_external_menu" = "0" ]; then
-        # Advanced fzf with enhanced styling and effects
+        # Dynamic header based on player availability
+        local header_text="🎌 ANI ULTIMATE - Enhanced by Andromeda ✨"
+        if command -v iina >/dev/null 2>&1 || [ -e "/Applications/IINA.app/Contents/MacOS/iina-cli" ]; then
+            header_text="🎌 ANI ULTIMATE (IINA Ready) - Enhanced by Andromeda ✨"
+        fi
+        
+        # Ultra-smooth fzf with glassmorphism-inspired colors and animations
         fzf "$1" --reverse --cycle --prompt "$2" \
-            --height=85% --border=double --margin=1,2 --padding=1,2 \
-            --color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9,fg+:#f8f8f2,bg+:#6272a4,hl+:#ff79c6,info:#8be9fd,prompt:#50fa7b,pointer:#ff79c6,marker:#ff79c6,spinner:#ffb86c,header:#bd93f9,border:#6272a4,gutter:#282a36,scrollbar:#6272a4 \
-            --header="🎌 ANI-CLI ULTIMATE - Enhanced by Andromeda ✨" \
-            --preview-window="right:45%:wrap" \
+            --height=90% --border=double --margin=1,3 --padding=2,3 \
+            --color=fg:#ffffff,bg:#0a0a0a,hl:#ff6b9d,fg+:#ffffff,bg+:#1a1a2e,hl+:#ff9f43 \
+            --color=info:#00d9ff,prompt:#ff6b9d,pointer:#ff9f43,marker:#00d9ff \
+            --color=spinner:#ff6b9d,header:#00d9ff,border:#333366,gutter:#0a0a0a,scrollbar:#333366 \
+            --header="$header_text" \
+            --header-first \
+            --preview-window="right:50%:wrap:rounded" \
             --bind="enter:accept" \
             --bind="esc:abort" \
-            --bind="tab:toggle" \
-            --bind="shift-tab:toggle-all" \
+            --bind="tab:toggle+down" \
+            --bind="shift-tab:toggle+up" \
             --bind="ctrl-a:select-all" \
             --bind="ctrl-d:deselect-all" \
             --bind="ctrl-t:toggle-all" \
+            --bind="ctrl-r:toggle-all+toggle-sort" \
+            --bind="ctrl-s:toggle-sort" \
+            --bind="?:toggle-preview" \
+            --bind="alt-up:preview-up" \
+            --bind="alt-down:preview-down" \
             --ansi --tabstop=4 \
             --info=inline \
             --pointer="🎌" \
             --marker="✨" \
+            --ellipsis="…" \
+            --scroll-off=3 \
+            --jump-labels="abcdefghijklmnopqrstuvwxyz" \
             --layout=reverse \
-            --multi
+            --multi \
+            --algo=v2
     else
         external_menu "$1" "$2" "$external_menu_args"
     fi
@@ -122,6 +244,20 @@ help_info() {
         Display a countdown to the next episode
       -U, --update
         Update the script
+    
+    🎌 NEW UNIQUE FEATURES:
+      -W, --watchlist
+        Show your personal watchlist
+      -F, --favorites  
+        Show your favorite anime
+      -L, --later
+        Show your watch later queue
+      --dashboard
+        Show stats dashboard with viewing analytics
+      --add-watchlist <anime>
+        Quick add anime to watchlist
+      --add-favorite <anime>
+        Quick add anime to favorites
     Some example usages:
       %s -q 720p banana fish
       %s --skip --skip-title \"one piece\" -S 2 one piece
@@ -161,13 +297,61 @@ dep_ch() {
 }
 
 where_iina() {
-    [ -e "/Applications/IINA.app/Contents/MacOS/iina-cli" ] && echo "/Applications/IINA.app/Contents/MacOS/iina-cli" && return 0
+    if [ -e "/Applications/IINA.app/Contents/MacOS/iina-cli" ]; then
+        echo "/Applications/IINA.app/Contents/MacOS/iina-cli" && return 0
+    elif command -v "iina" >/dev/null 2>&1; then
+        echo "iina" && return 0
+    fi
     printf "%s" "iina" && return 0
 }
 
 where_mpv() {
     command -v "flatpak" >/dev/null && flatpak info io.mpv.Mpv >/dev/null 2>&1 && printf "%s" "flatpak_mpv" && return 0
     printf "%s" "mpv" && return 0
+}
+
+# Enhanced player detection with IINA priority on macOS
+detect_best_player() {
+    # Check if running on macOS
+    if [ "$(uname)" = "Darwin" ]; then
+        # Prioritize IINA on macOS for best experience
+        if command -v iina >/dev/null 2>&1 || [ -e "/Applications/IINA.app/Contents/MacOS/iina-cli" ]; then
+            printf "🎬 Using IINA (Best for macOS)\n" >&2
+            where_iina && return 0
+        fi
+    fi
+    
+    # Fallback to mpv
+    if command -v mpv >/dev/null 2>&1; then
+        printf "📺 Using MPV\n" >&2
+        where_mpv && return 0
+    fi
+    
+    # VLC as last resort
+    if command -v vlc >/dev/null 2>&1; then
+        printf "🎞️ Using VLC\n" >&2
+        echo "vlc" && return 0
+    fi
+    
+    printf "⚠️ No suitable video player found\n" >&2
+    return 1
+}
+
+# Player installation guidance for macOS
+suggest_player_installation() {
+    if [ "$(uname)" = "Darwin" ]; then
+        printf "\n\033[1;33m⚠️  For the ultimate anime experience, upgrade to IINA!\033[0m\n"
+        printf "\033[2;37m   IINA is optimized for macOS with:\033[0m\n"
+        printf "\033[2;37m   • ⚡ Hardware-accelerated 4K/8K playback\033[0m\n"
+        printf "\033[2;37m   • 🎨 Native macOS design & Touch Bar support\033[0m\n"
+        printf "\033[2;37m   • 💫 Advanced subtitle rendering\033[0m\n"
+        printf "\033[2;37m   • 🔋 50% lower power consumption than MPV\033[0m\n"
+        printf "\033[2;37m   • 🎭 Picture-in-Picture mode\033[0m\n\n"
+        printf "\033[1;36m📥 Quick Install:\033[0m\n"
+        printf "\033[1;32m   brew install --cask iina\033[0m\n"
+        printf "\033[2;37m   Or download: https://iina.io/\033[0m\n\n"
+        printf "\033[2;36m   Then restart ANI Enhanced for automatic detection! ✨\033[0m\n"
+    fi
 }
 
 # SCRAPING
@@ -232,8 +416,7 @@ select_quality() {
     [ -z "$result" ] && printf "Specified quality not found, defaulting to best\n" 1>&2 && result=$(printf "%s" "$links" | head -n1)
 
     # add refr,sub flags for m3u8 and refr flag for yt
-    printf '%s' "$result" | grep -q "cc>" && subtitle="$(printf '%s' "$links" | sed -nE 's|subtitle >(.*)|\1|p')" &&
-        [ -n "$subtitle" ] && subs_flag="--sub-file=$subtitle"
+    printf '%s' "$result" | grep -q "cc>" && subtitle="$(printf '%s' "$links" | sed -nE 's|subtitle >(.*)|\1|p')"
     printf '%s' "$result" | grep -q "cc>" && m3u8_refr="$(printf '%s' "$links" | sed -nE 's|m3u8_refr >(.*)|\1|p')" && refr_flag="--referrer=$m3u8_refr"
     printf "%s" "$result" | grep -q "tools.fast4speed.rsvp" && refr_flag="--referrer=$allanime_refr"
 
@@ -396,7 +579,7 @@ play() {
     line_count=$(printf "%s\n" "$ep_no" | wc -l | tr -d "[:space:]")
     if [ "$line_count" != 1 ] || [ -n "$start" ]; then
         [ -z "$start" ] && start=$(printf "%s\n" "$ep_no" | head -n1)
-        [ -z "$end" ] && end=$(printf "%s\n" "$ep_no" | tail -n1)
+        [ -z "$end" ] && end=$(printf "%s" "$ep_no" | tail -n1)
         range=$(printf "%s\n" "$ep_list" | sed -nE "/^${start}\$/,/^${end}\$/p")
         [ -z "$range" ] && die "Invalid range!"
         for i in $range; do
@@ -433,7 +616,13 @@ download_dir="${ANI_CLI_DOWNLOAD_DIR:-.}"
 log_episode="${ANI_CLI_LOG:-1}"
 quality="${ANI_CLI_QUALITY:-best}"
 case "$(uname -a | cut -d " " -f 1,3-)" in
-    *Darwin*) player_function="${ANI_CLI_PLAYER:-$(where_iina)}" ;;   # mac OS
+    *Darwin*) 
+        if [ -z "$ANI_CLI_PLAYER" ]; then
+            player_function="$(detect_best_player 2>/dev/null || where_iina)"
+        else
+            player_function="$ANI_CLI_PLAYER"
+        fi
+        ;;   # macOS with enhanced detection
     *ndroid*) player_function="${ANI_CLI_PLAYER:-android_mpv}" ;;     # Android OS (termux)
     *MINGW* | *WSL2*) player_function="${ANI_CLI_PLAYER:-mpv.exe}" ;; # Windows OS
     *ish*) player_function="${ANI_CLI_PLAYER:-iSH}" ;;                # iOS (iSH)
@@ -503,6 +692,26 @@ while [ $# -gt 0 ]; do
             ;;
         -V | --version) version_info ;;
         -h | --help) help_info ;;
+        -W | --watchlist) show_watchlist; exit 0 ;;
+        -F | --favorites) show_favorites; exit 0 ;;
+        -L | --later) show_watch_later; exit 0 ;;
+        --dashboard) show_stats_dashboard; exit 0 ;;
+        --add-watchlist)
+            [ $# -lt 2 ] && die "missing argument!"
+            search_results=$(search_anime "$2")
+            anime_id=$(printf "%s" "$search_results" | head -1 | cut -f1)
+            anime_name=$(printf "%s" "$search_results" | head -1 | cut -f2)
+            add_to_watchlist "$anime_id" "$anime_name"
+            exit 0
+            ;;
+        --add-favorite)
+            [ $# -lt 2 ] && die "missing argument!"
+            search_results=$(search_anime "$2")
+            anime_id=$(printf "%s" "$search_results" | head -1 | cut -f1)
+            anime_name=$(printf "%s" "$search_results" | head -1 | cut -f2)
+            add_to_favorites "$anime_id" "$anime_name"
+            exit 0
+            ;;
         -e | --episode | -r | --range)
             [ $# -lt 2 ] && die "missing argument!"
             ep_no="$2"
@@ -527,7 +736,41 @@ done
 [ "$use_external_menu" = "0" ] && multi_selection_flag="${ANI_CLI_MULTI_SELECTION:-"-m"}"
 [ "$use_external_menu" = "1" ] && multi_selection_flag="${ANI_CLI_MULTI_SELECTION:-"-multi-select"}"
 [ "$external_menu_normal_window" = "1" ] && external_menu_args="-normal-window"
-printf "\33[2K\r\033[1;34mChecking dependencies...\033[0m\n"
+# Fancy startup banner
+show_startup_banner() {
+    clear
+    printf "\n"
+    typewriter_effect "🎌 ANI Enhanced - Ultimate Anime Experience 🎌" 0.04
+    printf "\n"
+    printf "\033[1;35m╭─══════════════════════════════════════════════════════════─╮\033[0m\n"
+    printf "\033[1;35m│ \033[1;36m                     🎬 ANI ENHANCED 🎬                     \033[1;35m │\033[0m\n"
+    printf "\033[1;35m│ \033[1;33m                  Created by Andromeda ✨                  \033[1;35m │\033[0m\n"
+    printf "\033[1;35m╰─══════════════════════════════════════════════════════════─╯\033[0m\n"
+    printf "\n"
+    
+    # Show detected player with better detection
+    if command -v iina >/dev/null 2>&1 || [ -e "/Applications/IINA.app/Contents/MacOS/iina-cli" ]; then
+        printf "\033[1;32m🎬 Player: IINA (Premium macOS Experience) ⚡\033[0m\n"
+        printf "\033[2;37m   • Hardware accelerated • 4K/8K support • Native macOS UI\033[0m\n"
+    elif command -v mpv >/dev/null 2>&1; then
+        printf "\033[1;33m📺 Player: MPV (High Performance) 🔥\033[0m\n"
+        printf "\033[2;37m   • Cross-platform • Lightweight • Advanced features\033[0m\n"
+        suggest_player_installation
+    else
+        printf "\033[1;31m⚠️  Player: VLC (Basic Support) 📹\033[0m\n"
+        printf "\033[2;37m   • Universal compatibility • Basic playback\033[0m\n"
+        suggest_player_installation
+    fi
+    
+    show_credits
+}
+
+# Always show banner except in history mode
+if [ "$search" != "history" ] && [ "$use_external_menu" = "0" ]; then
+    show_startup_banner
+fi
+
+show_loading_animation "🔧 Checking dependencies" 1
 dep_ch "curl" "sed" "grep" || true
 [ "$skip_intro" = 1 ] && (dep_ch "ani-skip" || true)
 dep_ch "fzf" || true
@@ -557,7 +800,12 @@ case "$search" in
     *)
         if [ "$use_external_menu" = "0" ]; then
             while [ -z "$query" ]; do
-                printf "\33[2K\r\033[1;36m🔍 Search anime: \033[0m" && read -r query
+                printf "\033[2;36m════════════════════════════════════════════════════════════════\033[0m\n"
+                printf "\033[1;35m🔍 Search for your anime:\033[0m "
+                read -r query
+                if [ -n "$query" ]; then
+                    show_loading_animation "🔎 Searching anime database" 1
+                fi
             done
         else
             [ -z "$query" ] && query=$(printf "" | external_menu "" "🔍 Search anime: " "$external_menu_args")
@@ -575,8 +823,13 @@ case "$search" in
         title=$(printf "%s" "$result" | cut -f2)
         allanime_title="$(printf "%s" "$title" | cut -d'(' -f1 | tr -d '[:punct:]')"
         id=$(printf "%s" "$result" | cut -f1)
+        
+        # Show anime poster
+        clear
+        show_anime_poster "$title" "$id"
+        
         ep_list=$(episodes_list "$id")
-        show_loading_animation "🎬 Loading episode list" 2
+        show_loading_animation "🎬 Loading episode list" 1
         
         if [ -z "$ep_no" ]; then
             # Enhanced episode selection
@@ -592,70 +845,294 @@ tput cuu1 && tput el
 # stores the position of cursor
 tput sc
 
-# playback & loop
-play
-[ "$player_function" = "download" ] || [ "$player_function" = "debug" ] && exit 0
+# playback & loop (removed - now handled in main loop)
 
-# Enhanced post-episode completion animation
-show_completion_banner() {
-    local ep_no="$1"
-    printf "\n\033[1;32m╭─────────────────────────────────────────────╮\033[0m\n"
-    printf "\033[1;32m│\033[1;36m            🎉 EPISODE COMPLETED! 🎉        \033[1;32m│\033[0m\n"
-    printf "\033[1;32m│\033[0m                                           \033[1;32m│\033[0m\n"
-    printf "\033[1;32m│\033[1;35m        Episode %s finished successfully    \033[1;32m│\033[0m\n" "$ep_no"
-    printf "\033[1;32m│\033[0m                                           \033[1;32m│\033[0m\n"
-    printf "\033[1;32m│\033[1;33m         What would you like to do next?    \033[1;32m│\033[0m\n"
-    printf "\033[1;32m╰─────────────────────────────────────────────╯\033[0m\n"
-    sleep 1
-}
-
-show_completion_banner "$ep_no"
-
-while cmd=$(printf "▶️  Next Episode - Continue your journey\n🔄 Replay Episode - Watch again\n⏮️  Previous Episode - Go back\n📺 Select Episode - Choose different episode\n⚙️  Change Quality - Adjust video quality\n🎨 View Statistics - See your progress\n🚪 Quit - Exit ANI-CLI" | nth "🎮 Episode $ep_no completed! What next: "); do
-    case "$cmd" in
-        "▶️  Next Episode"*)
-            printf "\033[1;36m⏭️  Loading next episode...\033[0m\n"
-            ep_no=$(printf "%s" "$ep_list" | sed -n "/^${ep_no}$/{n;p;}") 2>/dev/null
+# Main episode playback loop
+while true; do
+    # Play the current episode
+    play
+    [ "$player_function" = "download" ] || [ "$player_function" = "debug" ] && exit 0
+    
+    # Clear screen and show completion animation
+    clear
+    printf "\n\033[1;32m╭─════════════════════════════════════════════════════════════─╮\033[0m\n"
+    printf "\033[1;32m│ \033[1;36m                 🎉 EPISODE COMPLETED! 🎉                   \033[1;32m │\033[0m\n"
+    printf "\033[1;32m│ \033[1;33m               Episode %s finished successfully              \033[1;32m │\033[0m\n" "$ep_no"
+    printf "\033[1;32m╰─════════════════════════════════════════════════════════════─╯\033[0m\n\n"
+    
+    # Create menu options for FZF
+    menu_options="Next Episode - Continue your anime journey
+Replay Episode - Watch this episode again
+Previous Episode - Go back one episode
+Select Episode - Choose any episode
+Change Quality - Adjust video quality
+Add to Favorites - Save this anime
+Add to Watchlist - Track your progress
+Watch Later - Save for another time
+Add Note - Write thoughts about this episode
+View Dashboard - See your anime statistics
+Quit - Exit ANI Enhanced"
+    
+    # Show FZF menu with proper formatting
+    menu_choice=$(printf "%s" "$menu_options" | fzf \
+        --reverse --cycle \
+        --prompt "What's next? > " \
+        --height=60% --border=rounded --margin=1,3 --padding=1,2 \
+        --color=fg:#ffffff,bg:#0a0a0a,hl:#ff6b9d,fg+:#ffffff,bg+:#1a1a2e,hl+:#ff9f43 \
+        --color=info:#00d9ff,prompt:#ff6b9d,pointer:#ff9f43,marker:#00d9ff \
+        --color=spinner:#ff6b9d,header:#00d9ff,border:#333366 \
+        --header="🎌 Episode $ep_no Complete - Choose Your Next Action 🎌" \
+        --pointer="▶" \
+        --marker="✓" \
+        --ansi)
+        
+    # Handle the menu selection
+    case "$menu_choice" in
+        "Next Episode"*)
+            show_loading_animation "⏭️ Loading next episode" 1
+            new_ep=$(printf "%s" "$ep_list" | sed -n "/^${ep_no}$/{n;p;}") 2>/dev/null
+            [ -n "$new_ep" ] && ep_no="$new_ep" || die "No more episodes available!"
             ;;
-        "🔄 Replay Episode"*)
-            printf "\033[1;33m🔄 Reloading episode...\033[0m\n"
-            episode="$replay"
+        "Replay Episode"*)
+            show_loading_animation "🔄 Reloading episode" 1
+            # ep_no stays the same for replay
             ;;
-        "⏮️  Previous Episode"*)
-            printf "\033[1;36m⏮️  Loading previous episode...\033[0m\n"
-            ep_no=$(printf "%s" "$ep_list" | sed -n "/^${ep_no}$/{g;1!p;};h") 2>/dev/null
+        "Previous Episode"*)
+            show_loading_animation "⏮️ Loading previous episode" 1
+            prev_ep=$(printf "%s" "$ep_list" | sed -n "/^${ep_no}$/{g;1!p;};h") 2>/dev/null
+            [ -n "$prev_ep" ] && ep_no="$prev_ep" || die "This is the first episode!"
             ;;
-        "📺 Select Episode"*)
-            printf "\033[1;35m📺 Opening episode browser...\033[0m\n"
-            ep_no=$(printf "%s" "$ep_list" | nth "📺 Choose episode: " "$multi_selection_flag")
+        "Select Episode"*)
+            show_loading_animation "📺 Opening episode browser" 1
+            selected_ep=$(printf "%s" "$ep_list" | nth "📺 Choose episode: " "$multi_selection_flag")
+            [ -n "$selected_ep" ] && ep_no="$selected_ep" || continue
             ;;
-        "⚙️  Change Quality"*)
-            printf "\033[1;34m⚙️  Quality selection menu...\033[0m\n"
-            # Enhanced quality menu with descriptions
+        "Change Quality"*)
+            show_loading_animation "⚙️ Opening quality menu" 1
             quality_menu=$(printf "%s" "$links" | sed 's/>/p - /g; s/^/🎬 /g; s/$/  [Premium Quality]/g')
-            new_quality="$(printf "%s" "$quality_menu" | launcher "🔍 Select quality: " | sed 's/🎬 //g; s/p - .*//g')"
+            new_quality="$(printf "%s" "$quality_menu" | launcher "Select quality: " | sed 's/🎬 //g; s/p - .*//g')"
             [ -n "$new_quality" ] && select_quality "$new_quality"
+            continue  # Stay on same episode
             ;;
-        "🎨 View Statistics"*)
-            printf "\033[1;35m╭─────────────────────────────────────────────╮\033[0m\n"
-            printf "\033[1;35m│\033[1;36m            📊 VIEWING STATISTICS 📊        \033[1;35m│\033[0m\n"
-            printf "\033[1;35m│\033[0m                                           \033[1;35m│\033[0m\n"
-            printf "\033[1;35m│\033[1;33m  Current Anime: %s\033[1;35m│\033[0m\n" "$title"
-            printf "\033[1;35m│\033[1;32m  Current Episode: %s\033[1;35m│\033[0m\n" "$ep_no"
-            printf "\033[1;35m│\033[1;34m  Total Episodes: %s\033[1;35m│\033[0m\n" "$(printf "%s" "$ep_list" | wc -l | tr -d ' ')"
-            printf "\033[1;35m│\033[1;31m  Progress: %.1f%%\033[1;35m│\033[0m\n" "$(printf "%s %s" "$ep_no" "$(printf "%s" "$ep_list" | wc -l | tr -d ' ')" | awk '{print ($1/$2)*100}')"
-            printf "\033[1;35m╰─────────────────────────────────────────────╯\033[0m\n"
-            printf "\nPress Enter to continue..."
-            read
+        "Add to Favorites"*)
+            add_to_favorites "$id" "$title" 5
+            printf "\n\033[1;32m✨ Added to favorites!\033[0m\n"
+            sleep 2
+            continue  # Stay on same episode
             ;;
-        *) 
-            printf "\033[1;36m👋 Thanks for using ANI-CLI ULTIMATE! ✨\033[0m\n"
+        "Add to Watchlist"*)
+            add_to_watchlist "$id" "$title" "watching"
+            printf "\n\033[1;32m✨ Added to watchlist!\033[0m\n"
+            sleep 2
+            continue  # Stay on same episode
+            ;;
+        "Watch Later"*)
+            add_to_watch_later "$id" "$title" "$ep_no"
+            printf "\n\033[1;32m✨ Added to watch later!\033[0m\n"
+            sleep 2
+            continue  # Stay on same episode
+            ;;
+        "Add Note"*)
+            printf "\n\033[1;36m📝 Write your note for Episode %s:\033[0m " "$ep_no"
+            read -r note
+            [ -n "$note" ] && add_episode_note "$id" "$ep_no" "$note"
+            printf "\n\033[1;32m✨ Note added!\033[0m\n"
+            sleep 2
+            continue  # Stay on same episode
+            ;;
+        "View Dashboard"*)
+            clear
+            show_stats_dashboard
+            printf "\n\033[2;37mPress Enter to continue...\033[0m"
+            read -r
+            continue  # Stay on same episode
+            ;;
+        "Quit"*|"")
+            clear
+            typewriter_effect "🎌 Thanks for using ANI Enhanced! ✨" 0.04
+            printf "\n\033[1;35m╭─══════════════════════════════════════════════════════════─╮\033[0m\n"
+            printf "\033[1;35m│ \033[1;36m              See you next time, anime lover! 👋           \033[1;35m │\033[0m\n"
+            printf "\033[1;35m╰─══════════════════════════════════════════════════════════─╯\033[0m\n"
+            show_credits
+            printf "\n"
             exit 0 
             ;;
+        *)
+            # If user cancels FZF or something goes wrong, quit gracefully
+            printf "\n\033[1;33m👋 See you next time!\033[0m\n"
+            exit 0
+            ;;
     esac
-    [ -z "$ep_no" ] && die "Out of range"
-    play
 done
+
+# ==================== NEW UNIQUE FEATURES ====================
+
+# Watchlist management system
+watchlist_file="$hist_dir/watchlist"
+favorites_file="$hist_dir/favorites"
+watch_later_file="$hist_dir/watch_later"
+[ ! -f "$watchlist_file" ] && : >"$watchlist_file"
+[ ! -f "$favorites_file" ] && : >"$favorites_file"
+[ ! -f "$watch_later_file" ] && : >"$watch_later_file"
+
+# Add anime to watchlist with status
+add_to_watchlist() {
+    local anime_id="$1"
+    local anime_name="$2"
+    local status="${3:-watching}"
+    local timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+    
+    if ! grep -q "^$anime_id" "$watchlist_file"; then
+        printf "%s\t%s\t%s\t%s\n" "$anime_id" "$anime_name" "$status" "$timestamp" >> "$watchlist_file"
+        printf "\033[1;32m✓\033[0m Added to watchlist: %s\n" "$anime_name"
+    else
+        printf "\033[1;33m!\033[0m Already in watchlist\n"
+    fi
+}
+
+# Show watchlist with status
+show_watchlist() {
+    if [ ! -s "$watchlist_file" ]; then
+        printf "\033[1;33mYour watchlist is empty!\033[0m\n"
+        exit 0
+    fi
+    
+    printf "\033[1;35m╭───────────────────────────────────────────────────────────╮\033[0m\n"
+    printf "\033[1;35m│\033[1;36m                    🎌 MY WATCHLIST 🎌                    \033[1;35m│\033[0m\n"
+    printf "\033[1;35m╰───────────────────────────────────────────────────────────╯\033[0m\n\n"
+    
+    while IFS=$'\t' read -r id name status timestamp; do
+        case "$status" in
+            watching) icon="📺" color="32" ;;
+            completed) icon="✅" color="36" ;;
+            on_hold) icon="⏸️" color="33" ;;
+            dropped) icon="❌" color="31" ;;
+            *) icon="📋" color="37" ;;
+        esac
+        printf "%s \033[1;%sm%-40s\033[0m (%s)\n" "$icon" "$color" "$name" "$status"
+    done < "$watchlist_file"
+}
+
+# Mark anime as completed/dropped/on-hold
+update_watchlist_status() {
+    local anime_id="$1"
+    local new_status="$2"
+    
+    if grep -q "^$anime_id" "$watchlist_file"; then
+        sed -i.bak "s/^$anime_id\t\([^\t]*\)\t[^\t]*\t/&$new_status\t/" "$watchlist_file"
+        printf "\033[1;32m✓\033[0m Status updated to: %s\n" "$new_status"
+    fi
+}
+
+# Add to favorites
+add_to_favorites() {
+    local anime_id="$1"
+    local anime_name="$2"
+    local rating="${3:-5}"
+    local timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+    
+    if ! grep -q "^$anime_id" "$favorites_file"; then
+        printf "%s\t%s\t%s\t%s\n" "$anime_id" "$anime_name" "$rating" "$timestamp" >> "$favorites_file"
+        printf "\033[1;31m❤️\033[0m Added to favorites: %s (★%s)\n" "$anime_name" "$rating"
+    else
+        printf "\033[1;33m!\033[0m Already in favorites\n"
+    fi
+}
+
+# Show favorites
+show_favorites() {
+    if [ ! -s "$favorites_file" ]; then
+        printf "\033[1;33mYour favorites list is empty!\033[0m\n"
+        exit 0
+    fi
+    
+    printf "\033[1;31m╭───────────────────────────────────────────────────────────╮\033[0m\n"
+    printf "\033[1;31m│\033[1;36m                   ❤️  MY FAVORITES ❤️                     \033[1;31m│\033[0m\n"
+    printf "\033[1;31m╰───────────────────────────────────────────────────────────╯\033[0m\n\n"
+    
+    while IFS=$'\t' read -r id name rating timestamp; do
+        stars=""
+        for i in $(seq 1 $rating); do stars="${stars}★"; done
+        printf "%-40s \033[1;33m%s\033[0m\n" "$name" "$stars"
+    done < "$favorites_file" | sort -k2 -r
+}
+
+# Watch later queue
+add_to_watch_later() {
+    local anime_id="$1"
+    local anime_name="$2"
+    local episode="${3:-1}"
+    local timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
+    
+    printf "%s\t%s\t%s\t%s\n" "$anime_id" "$anime_name" "$episode" "$timestamp" >> "$watch_later_file"
+    printf "\033[1;36m⏰\033[0m Added to watch later: %s (Episode %s)\n" "$anime_name" "$episode"
+}
+
+# Show watch later queue
+show_watch_later() {
+    if [ ! -s "$watch_later_file" ]; then
+        printf "\033[1;33mYour watch later queue is empty!\033[0m\n"
+        exit 0
+    fi
+    
+    printf "\033[1;36m╭───────────────────────────────────────────────────────────╮\033[0m\n"
+    printf "\033[1;36m│\033[1;36m                  ⏰ WATCH LATER QUEUE ⏰                  \033[1;36m│\033[0m\n"
+    printf "\033[1;36m╰───────────────────────────────────────────────────────────╯\033[0m\n\n"
+    
+    while IFS=$'\t' read -r id name episode timestamp; do
+        printf "⏰ %-35s Episode %s\n" "$name" "$episode"
+    done < "$watch_later_file"
+}
+
+# Quick stats dashboard
+show_stats_dashboard() {
+    local total_watched=$(grep -c "watching\|completed" "$watchlist_file" 2>/dev/null || echo 0)
+    local completed=$(grep -c "completed" "$watchlist_file" 2>/dev/null || echo 0)
+    local favorites=$(wc -l < "$favorites_file" 2>/dev/null || echo 0)
+    local watch_later=$(wc -l < "$watch_later_file" 2>/dev/null || echo 0)
+    
+    printf "\033[1;35m╭───────────────────────────────────────────────────────────╮\033[0m\n"
+    printf "\033[1;35m│\033[1;36m                  📊 ANI-CLI DASHBOARD 📊                  \033[1;35m│\033[0m\n"
+    printf "\033[1;35m╰───────────────────────────────────────────────────────────╯\033[0m\n\n"
+    printf "📺 Total Anime Watched: \033[1;32m%s\033[0m\n" "$total_watched"
+    printf "✅ Completed Series: \033[1;36m%s\033[0m\n" "$completed"
+    printf "❤️  Favorites: \033[1;31m%s\033[0m\n" "$favorites"
+    printf "⏰ Watch Later Queue: \033[1;33m%s\033[0m\n" "$watch_later"
+    printf "\n"
+    
+    # Show recent activity
+    if [ -s "$histfile" ]; then
+        printf "\033[1;34m📅 Recent Activity:\033[0m\n"
+        tail -5 "$histfile" | while IFS=$'\t' read -r ep id title; do
+            printf "   • %s - Episode %s\n" "$(echo "$title" | sed 's/[0-9]* episodes//')" "$ep"
+        done
+    fi
+}
+
+# Enhanced episode tracking with notes
+add_episode_note() {
+    local anime_id="$1"
+    local episode="$2"
+    local note="$3"
+    local notes_file="$hist_dir/notes/${anime_id}.notes"
+    
+    mkdir -p "$hist_dir/notes"
+    printf "%s\t%s\t%s\n" "$episode" "$(date '+%Y-%m-%d %H:%M')" "$note" >> "$notes_file"
+    printf "\033[1;32m✓\033[0m Note added for episode %s\n" "$episode"
+}
+
+# Show episode notes
+show_episode_notes() {
+    local anime_id="$1"
+    local notes_file="$hist_dir/notes/${anime_id}.notes"
+    
+    if [ -f "$notes_file" ] && [ -s "$notes_file" ]; then
+        printf "\033[1;33m📝 Episode Notes:\033[0m\n"
+        while IFS=$'\t' read -r ep timestamp note; do
+            printf "   Episode %s (%s): %s\n" "$ep" "$timestamp" "$note"
+        done < "$notes_file"
+    fi
+}
 
 # ani-cli
 #

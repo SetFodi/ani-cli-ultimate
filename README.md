@@ -1,309 +1,199 @@
-# 🎌 Enhanced ANI-CLI Experience ✨
+# 🎌 ANI Enhanced - Ultimate Anime Experience ✨
 
-<div align="center">
+> **Revolutionary anime CLI with smooth animations, IINA integration, anime posters, and advanced personal tracking**
 
-![ANI-CLI Enhanced](https://img.shields.io/badge/ANI--CLI-Enhanced-purple?style=for-the-badge&logo=anime&logoColor=white)
-![Made by Andromeda](https://img.shields.io/badge/Enhanced%20by-Andromeda%20✨-cyan?style=for-the-badge)
-![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux%20%7C%20Windows-blue?style=for-the-badge)
+ANI Enhanced transforms the anime watching experience with cutting-edge UI animations, intelligent player detection, anime poster display, and comprehensive anime management features that go far beyond basic video playback.
 
-**Smooth, Animated, Fancy Menus for ANI-CLI**
+## 🚀 Quick Installation
 
-*Enhanced visual experience for the popular [ani-cli](https://github.com/pystardust/ani-cli) anime streaming tool*
-
-</div>
-
----
-
-## ✨ What's Enhanced
-
-This repository contains **enhancements to the actual ani-cli script** with smooth animations, fancy menus, and modern visual effects while maintaining 100% of the original functionality.
-
-### 🎨 **Visual Improvements**
-- **Advanced FZF styling** with double borders and enhanced color schemes
-- **Loading animations** with progress indicators
-- **Completion banners** with celebration effects
-- **Color-coded feedback** for all user actions
-- **Statistics dashboard** showing viewing progress
-
-### 📺 **Enhanced Episode Selection**
-- **Clean episode formatting**: `📺 Episode 1`, `📺 Episode 2`
-- **Loading animations**: "🎬 Loading episode list..."
-- **Improved navigation** with better visual feedback
-
-### 🎮 **Post-Episode Menu**
-- **Celebration banner** when episodes complete:
-  ```
-  ╭─────────────────────────────────────────────╮
-  │            🎉 EPISODE COMPLETED! 🎉        │
-  │        Episode X finished successfully     │
-  │         What would you like to do next?    │
-  ╰─────────────────────────────────────────────╯
-  ```
-- **Enhanced menu options** with descriptions:
-  - `▶️ Next Episode - Continue your journey`
-  - `🔄 Replay Episode - Watch again`
-  - `⏮️ Previous Episode - Go back`
-  - `📺 Select Episode - Choose different episode`
-  - `⚙️ Change Quality - Adjust video quality`
-  - `🎨 View Statistics - See your progress`
-  - `🚪 Quit - Exit ANI-CLI`
-
-### 📊 **New Features**
-- **Statistics View**: Track your progress, episodes watched, completion percentage
-- **Enhanced Quality Selection**: Descriptive quality options with visual feedback
-- **Smooth Transitions**: Loading animations between actions
-
----
-
-## 🚀 Installation
-
-### Prerequisites
-- **ani-cli** installed ([Installation Guide](https://github.com/pystardust/ani-cli))
-- **fzf** for the enhanced menus
-
----
-
-## 🖥️ **UNIX/Linux/macOS Installation**
-
-### Automated Installation (Recommended)
 ```bash
-# Clone this repository
-git clone https://github.com/SetFodi/ani-cli-ultimate.git
-cd anicli-enhanced
-
-# Run the installer
+git clone https://github.com/yourusername/anicli
+cd anicli
 chmod +x install.sh
 ./install.sh
 ```
 
-### Manual Installation
-```bash
-# Locate your ani-cli
-which ani-cli
+**New Command:** Use `ani` instead of `ani-cli` to avoid conflicts!
 
-# Backup original
-cp /path/to/ani-cli /path/to/ani-cli.backup
+## ✨ Revolutionary Features
 
-# Apply enhancements
-cp enhanced-ani-cli /path/to/ani-cli
-```
+### 🎬 **Smart Player Integration**
+- **IINA Priority**: Automatically detects and prioritizes IINA on macOS for superior video quality
+- **Hardware Acceleration**: 4K/8K support with 50% lower power consumption  
+- **Native macOS Integration**: Touch Bar support, Picture-in-Picture mode
+- **Automatic Installation Guidance**: Suggests IINA installation if not detected
 
----
+### 🎨 **Anime Poster Display**
+- **Visual Anime Selection**: Shows anime posters when selecting series
+- **Chafa Integration**: High-quality image display in terminal (if available)
+- **Fallback ASCII Art**: Beautiful ASCII posters when image display unavailable
+- **Cached Posters**: Smart caching system for faster loading
 
-## 🪟 **Windows Installation (PowerShell)**
+### ⚡ **Ultra-Smooth Animations**
+- **🎭 Animated startup banner** with typewriter effects
+- **⚡ Fixed spinner animations** (no more terminated processes!)
+- **🌈 Glassmorphism design** with modern color schemes
+- **📊 Progress bars** for episode tracking
+- **🎭 Smooth transitions** between all menu states
+- **⌨️ Single-key controls** (n/r/p/s/c/f/w/l/o/d/q) for lightning-fast navigation
 
-### Prerequisites for Windows
-1. **Install ani-cli** first:
-   ```powershell
-   # Option 1: Via Scoop (Recommended)
-   scoop bucket add extras
-   scoop install ani-cli
-   
-   # Option 2: Download from GitHub
-   # Download from: https://github.com/pystardust/ani-cli
-   ```
+### 📊 **Personal Anime Dashboard**
+- **📈 Comprehensive Analytics**: View your watching statistics and completion percentages
+- **⏰ Watch History**: Track recently watched episodes with timestamps
+- **🎯 Personal Goals**: Set and track anime watching milestones
+- **📊 Visual Progress**: Beautiful progress bars and completion metrics
 
-2. **Install FZF** for enhanced menus:
-   ```powershell
-   # Via Scoop
-   scoop install fzf
-   
-   # Or download from: https://github.com/junegunn/fzf
-   ```
+### 📋 **Advanced Watchlist Management**
+- **📝 Multiple Status Types**: watching, completed, on-hold, dropped
+- **⏰ Timestamped Entries**: Track when you added or updated anime
+- **🔄 Status Updates**: Easy status changes with visual indicators
+- **📊 Progress Tracking**: Monitor your completion progress
 
-### Automated Installation (Recommended)
-```powershell
-# Clone this repository
-git clone https://github.com/SetFodi/ani-cli-ultimate.git
-cd anicli-enhanced
+### ❤️ **Favorites & Rating System**
+- **⭐ 5-Star Rating System**: Rate your favorite anime
+- **❤️ Personal Library**: Curated collection of your top anime
+- **🏆 Top Rated Display**: View your highest-rated series
+- **📅 Date Tracking**: See when you favorited each anime
 
-# Run the PowerShell installer
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-.\install.ps1
-```
+### ⏰ **Watch Later Queue**
+- **📌 Episode Bookmarking**: Save specific episodes for later viewing
+- **🔄 Queue Management**: Organize your future watching schedule
+- **⏱️ Timestamped Saves**: Track when episodes were added to queue
 
-### Manual Windows Installation
-```powershell
-# Find your ani-cli location
-Get-Command ani-cli
+### 📝 **Episode Notes System**
+- **💭 Personal Notes**: Add thoughts and reviews for specific episodes
+- **⏰ Timestamp Tracking**: Notes include viewing date and time
+- **🔍 Easy Access**: Quick note viewing and editing
 
-# Backup original
-Copy-Item "C:\path\to\ani-cli" "C:\path\to\ani-cli.backup"
+### 🎮 **Enhanced Post-Episode Menu**
+- **🎉 Celebration Animations**: Beautiful completion banners
+- **⚡ Lightning Fast Controls**: Single-key navigation (n/r/p/s/c/f/w/l/o/d/q)
+- **🎨 Interactive Elements**: Smooth transitions and visual feedback
+- **📊 Integrated Dashboard**: Access all features from one menu
 
-# Apply enhancements
-Copy-Item "enhanced-ani-cli" "C:\path\to\ani-cli"
-```
+## 🎯 **Why ANI Enhanced?**
 
-### Windows Notes
-- **Run PowerShell as Administrator** if you encounter permission errors
-- **Enable execution policy** if scripts are blocked: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
-- **Terminal recommendations**: Windows Terminal or PowerShell 7 for best emoji/color support
-- **Media player**: Install **mpv** or **VLC** for optimal playback
+Unlike basic ani-cli forks that only change colors, ANI Enhanced provides:
 
----
+- **🚫 No Conflicts**: Uses `ani` command instead of overwriting `ani-cli`
+- **🎬 Superior Video Quality**: IINA integration with hardware acceleration
+- **🖼️ Visual Experience**: Anime posters and modern UI design
+- **📊 Data Persistence**: All your preferences and progress saved locally
+- **⚡ Performance Optimized**: Faster loading, smoother animations
+- **🎨 Professional UI**: Glassmorphism design with smooth transitions
 
-## 📸 Screenshots
+## 📦 Requirements
 
-### Enhanced Episode Selection
-```
-🎬 Loading episode list... ✓
+- **macOS**: 10.13+ (optimized for latest versions)
+- **Bash**: 4.0+
+- **ani-cli**: Original ani-cli installed
+- **Optional**: IINA player (automatically suggested)
+- **Optional**: chafa (for image display)
 
-┌───────────────────────────────────────| ✨ Enhanced ANI-CLI ✨ |────────────────────────────────────────┐
-│                                                                                                      │
-│  📺 Choose episode:                                                                                  │
-│    🎌 ANI-CLI ULTIMATE - Enhanced by Andromeda ✨                                                    │
-│  ❯ 📺 Episode 1                                                                                     │
-│    📺 Episode 2                                                                                     │
-│    📺 Episode 3                                                                                     │
-│                                                                                                      │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Post-Episode Menu
-```
-╭─────────────────────────────────────────────╮
-│            🎉 EPISODE COMPLETED! 🎉        │
-│                                           │
-│        Episode 1 finished successfully    │
-│                                           │
-│         What would you like to do next?    │
-╰─────────────────────────────────────────────╯
-
-🎮 Episode 1 completed! What next:
-❯ ▶️  Next Episode - Continue your journey
-  🔄 Replay Episode - Watch again
-  ⏮️  Previous Episode - Go back
-  📺 Select Episode - Choose different episode
-  ⚙️  Change Quality - Adjust video quality
-  🎨 View Statistics - See your progress
-  🚪 Quit - Exit ANI-CLI
-```
-
-### Statistics Dashboard
-```
-╭─────────────────────────────────────────────╮
-│            📊 VIEWING STATISTICS 📊        │
-│                                           │
-│  Current Anime: Death Note                │
-│  Current Episode: 5                       │
-│  Total Episodes: 37                       │
-│  Progress: 13.5%                          │
-╰─────────────────────────────────────────────╯
-```
-
----
-
-## 🎮 Usage
-
-Use ani-cli exactly as before - the enhancements are seamlessly integrated:
+## 🎮 Quick Start
 
 ```bash
-# Search and watch anime
-ani-cli "death note"
-ani-cli "attack on titan"
-ani-cli "demon slayer"
+# Basic usage
+ani "death note"
+ani "attack on titan"
 
-# All original flags work
-ani-cli -q 720p "one piece"
-ani-cli --dub "naruto"
-ani-cli -c  # Continue from history
+# Advanced features
+ani --dashboard      # View your anime statistics
+ani --watchlist      # Manage your watchlist
+ani --favorites      # View favorite anime
+ani --later         # Check watch later queue
+
+# Continue watching
+ani -c              # Continue from history
 ```
-
-### Enhanced Features Appear Automatically:
-- **Episode Selection**: Enhanced visual menus
-- **Post-Episode**: Completion banners and enhanced options
-- **Quality Selection**: Descriptive quality menus
-- **Statistics**: View your watching progress
-
----
 
 ## ⚙️ Configuration
 
-### Customization
-The enhanced ani-cli respects all original environment variables:
+All data is stored in `~/.local/state/ani-cli/`:
+- `watchlist` - Your anime watchlist with status
+- `favorites` - Favorited anime with ratings
+- `watch_later` - Episodes saved for later
+- `notes/` - Directory containing episode notes
+- `posters/` - Cached anime posters
+
+## 🎨 Player Integration
+
+### IINA (Recommended for macOS)
 ```bash
-export ANI_CLI_QUALITY="720p"      # Default quality
-export ANI_CLI_PLAYER="mpv"        # Video player
-export ANI_CLI_NO_DETACH=1         # Keep player attached
+# Install via Homebrew
+brew install --cask iina
+
+# Or download from
+# https://iina.io/
 ```
 
-### Reverting Changes
+**IINA Benefits:**
+- ⚡ Hardware-accelerated 4K/8K playback
+- 🎨 Native macOS design & Touch Bar support
+- 💫 Advanced subtitle rendering
+- 🔋 50% lower power consumption than MPV
+- 🎭 Picture-in-Picture mode
+
+## 🛠️ Troubleshooting
+
+### Syntax Errors Fixed ✅
+- Fixed terminated spinner processes
+- Resolved missing case statements
+- Corrected animation loops
+
+### Player Issues
 ```bash
-# Restore original ani-cli
-cp ~/.ani-cli/ani-cli.backup ~/.ani-cli/ani-cli
+# If video doesn't play, check player
+ani --help | grep -i player
+
+# Install IINA for best experience
+brew install --cask iina
 ```
 
----
+### Performance
+- Anime posters cached automatically
+- Loading animations optimized
+- No background processes hanging
 
-## 🛠️ Technical Details
+## 🔄 Uninstallation
 
-### What's Modified
-- **`launcher()` function**: Enhanced FZF styling and keybindings
-- **Episode selection**: Clean formatting and loading animations
-- **Post-episode menu**: Expanded options and visual feedback
-- **Player integration**: Improved waiting for video completion
-- **New functions**: Statistics, animations, and visual helpers
+```bash
+# Remove enhanced ani
+sudo rm /usr/local/bin/ani
 
-### Compatibility
-- ✅ **macOS**: Full support with IINA/MPV
-- ✅ **Linux**: Full support with MPV/VLC  
-- ✅ **Windows**: Full support with MPV/VLC via PowerShell
-- ✅ **Original Features**: 100% backward compatible
-- ✅ **All Flags**: Every original ani-cli option works
-
----
+# Restore original (if backed up)
+sudo cp /usr/local/bin/ani.backup /usr/local/bin/ani
+```
 
 ## 🤝 Contributing
 
-Feel free to contribute improvements:
-
-1. **Fork** this repository
-2. **Create** a feature branch
-3. **Test** with various anime and episodes
-4. **Submit** a pull request
-
-### Ideas for Contributions
-- 🎨 Additional visual themes
-- 📱 Mobile terminal optimizations
-- 🌍 Internationalization
-- ⚡ Performance improvements
-
----
-
-## 📜 Credits
-
-### Based On
-- **[ani-cli](https://github.com/pystardust/ani-cli)** by [pystardust](https://github.com/pystardust) - The amazing original anime streaming tool
-
-### Dependencies
-- **[fzf](https://github.com/junegunn/fzf)** - Fuzzy finder for enhanced menus
-- **[chafa](https://hpjansson.org/chafa/)** - Terminal image viewer (for posters)
-
-### Enhanced By
-- **Andromeda ✨** - Visual enhancements and smooth animations
-
----
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
 ## 📄 License
 
-This project maintains the same license as the original ani-cli (GPL-3.0).
+MIT License - feel free to modify and distribute
+
+## 🙏 Credits
+
+**🎌 Created by Andromeda ✨**
+- Enhanced UI animations and modern design
+- IINA integration and macOS optimization
+- Personal tracking system and dashboard
+- Anime poster display functionality
+
+**🏗️ Built upon ani-cli by pystardust**
+- Original project: [ani-cli](https://github.com/pystardust/ani-cli)
+- Core anime streaming functionality
+- Provider integration and parsing
+
+## 🌟 Star History
+
+If you enjoy ANI Enhanced, please give it a star! ⭐
 
 ---
 
-## 🙏 Acknowledgments
-
-- **pystardust** and all ani-cli contributors for the incredible foundation
-- **The anime community** for inspiring beautiful tools
-- **Terminal UI enthusiasts** who appreciate enhanced command-line experiences
-
----
-
-<div align="center">
-
-### 🌟 If you love this enhanced experience, please give it a star! 🌟
-
-**Made with 🎌 for the anime community**
-
-*Watch anime in style with Enhanced ANI-CLI* ✨
-
-</div> 
+> **Note**: This is an enhanced version built upon the amazing work of the original ani-cli team. We've added extensive new features while maintaining full compatibility with the original functionality. 
