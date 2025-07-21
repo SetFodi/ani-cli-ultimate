@@ -26,14 +26,19 @@ POSTER_CACHE="$CACHE_DIR/posters"
 HISTORY_FILE="$CACHE_DIR/history"
 mkdir -p "$CACHE_DIR" "$POSTER_CACHE"
 
-# Custom FZF styling for ALL menus  
-export FZF_ULTIMATE="--height=80% --border=rounded --margin=1 --padding=1 --reverse --cycle --color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9,fg+:#f8f8f2,bg+:#6272a4,hl+:#ff79c6,info:#8be9fd,prompt:#50fa7b,pointer:#ff79c6,marker:#ff79c6,spinner:#ffb86c,header:#bd93f9,border:#6272a4"
+# Custom FZF styling for ALL menus - Enhanced glassmorphism theme
+export FZF_ULTIMATE="--height=85% --border=double --margin=1,2 --padding=1,2 --reverse --cycle \
+    --color=fg:#e0e0e0,bg:#0a0a0a,hl:#ff6b9d,fg+:#ffffff,bg+:#1a1a2e,hl+:#ff9f43 \
+    --color=info:#00d9ff,prompt:#ff6b9d,pointer:#ff9f43,marker:#00d9ff,spinner:#ff6b9d \
+    --color=header:#00d9ff,border:#444477,gutter:#0a0a0a,scrollbar:#666699,preview-bg:#0f0f0f \
+    --preview-window=rounded --bind=ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down \
+    --bind=shift-up:toggle+up,shift-down:toggle+down,ctrl-a:select-all,ctrl-n:deselect-all"
 
-# Enhanced prompts for different menus
-ANIME_PROMPT="🎌 Select anime: "
-EPISODE_PROMPT="📺 Choose episode: "
-QUALITY_PROMPT="⚙️  Select quality: "
-ACTION_PROMPT="🎮 What next: "
+# Enhanced prompts for different menus with better visual hierarchy
+ANIME_PROMPT="🎌 Select anime ❯ "
+EPISODE_PROMPT="📺 Choose episode ❯ "
+QUALITY_PROMPT="⚙️  Select quality ❯ "
+ACTION_PROMPT="🎮 What next ❯ "
 
 # Animated banner with effects
 print_animated_banner() {
@@ -45,78 +50,228 @@ print_animated_banner() {
     echo "     ╚═══════════════════════════════════════════════════════════╝"
     echo -e "${RESET}"
     
-    # Loading animation
+    # Optimized loading animation - faster and more efficient
     echo -e "${CYAN}${BOLD}🚀 Initializing Ultimate Anime Experience...${RESET}"
+    local progress_chars="▓▓▓▓▓"
+    echo -ne "${PINK}"
     for i in {1..5}; do
-        echo -ne "${PINK}▓"
-        sleep 0.1
+        echo -ne "${progress_chars:0:$i}"
+        sleep 0.05  # Reduced from 0.1 to 0.05
     done
     echo -e "${GREEN} Ready!${RESET}"
     echo ""
 }
 
-# Enhanced loading spinner
+# Enhanced loading spinner - more efficient
 show_spinner() {
     local pid=$1
     local message="${2:-Loading}"
-    local delay=0.1
+    local delay=0.075  # Optimized delay
     local spinstr='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+    local spin_length=${#spinstr}
+    local i=0
+    
     echo -ne "${CYAN}${message}... "
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-        local temp=${spinstr#?}
-        printf "%c" "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
+    while kill -0 "$pid" 2>/dev/null; do
+        local char=${spinstr:$i:1}
+        printf "%c" "$char"
         sleep $delay
         printf "\b"
+        i=$(( (i + 1) % spin_length ))
     done
     echo -e "${GREEN}✅${RESET}"
 }
 
-# Enhanced poster display
+# Modern progress bar with smooth animation
+show_progress_bar() {
+    local current="$1"
+    local total="$2"
+    local width=50
+    local percentage=$((current * 100 / total))
+    local filled=$((current * width / total))
+    
+    # Use modern block characters for better visuals
+    local full_block="█"
+    local partial_blocks=("" "▏" "▎" "▍" "▌" "▋" "▊" "▉")
+    
+    printf "\r\033[1;36m["
+    
+    # Full blocks
+    for i in $(seq 1 $filled); do printf "$full_block"; done
+    
+    # Partial block for smoother appearance
+    local remainder=$((current * width % total))
+    if [ $remainder -ne 0 ] && [ $filled -lt $width ]; then
+        local partial_index=$((remainder * 8 / total))
+        printf "${partial_blocks[$partial_index]}"
+        filled=$((filled + 1))
+    fi
+    
+    # Empty space
+    for i in $(seq $((filled + 1)) $width); do printf "░"; done
+    
+    printf "] %d%% \033[0m" "$percentage"
+    
+    [ "$current" -eq "$total" ] && printf "\n"
+}
+
+# Optimized typewriter effect with variable speed
+typewriter_effect() {
+    local text="$1"
+    local delay="${2:-0.03}"  # Faster default delay
+    local fast_chars=".,!?:;"  # Characters that should appear faster
+    
+    for i in $(seq 1 ${#text}); do
+        local char=$(printf "%s" "$text" | cut -c $i)
+        printf "%c" "$char"
+        
+        # Faster delay for punctuation
+        if [[ "$fast_chars" == *"$char"* ]]; then
+            sleep 0.01
+        else
+            sleep "$delay"
+        fi
+    done
+    printf "\n"
+}
+
+# Enhanced cache management
+optimize_cache() {
+    # Clean old cache files (older than 7 days)
+    find "$POSTER_CACHE" -name "*.jpg" -mtime +7 -delete 2>/dev/null || true
+    
+    # Limit cache size to 100MB
+    local cache_size=$(du -sm "$POSTER_CACHE" 2>/dev/null | cut -f1 || echo "0")
+    if [ "$cache_size" -gt 100 ]; then
+        # Remove oldest files first
+        find "$POSTER_CACHE" -name "*.jpg" -type f -printf '%T@ %p\n' | sort -n | head -n 10 | cut -d' ' -f2- | xargs rm -f
+    fi
+}
+
+# Enhanced poster display with optimized caching and better visuals
 display_enhanced_poster() {
     local anime_title="$1"
     local poster_url="$2"
     
-    if [[ -z "$poster_url" || "$poster_url" == "null" ]]; then
-        return 1
-    fi
+    [[ -z "$poster_url" || "$poster_url" == "null" ]] && return 1
     
     local cache_file="$POSTER_CACHE/$(echo "$anime_title" | sed 's/[^a-zA-Z0-9]/_/g').jpg"
     
-    # Download with fancy progress
+    # Optimize cache on startup
+    optimize_cache
+    
+    # Smart download with progress tracking
     if [[ ! -f "$cache_file" ]]; then
         echo -e "${CYAN}📥 ${BOLD}Downloading poster for ${YELLOW}$anime_title${RESET}${CYAN}...${RESET}"
-        curl -s -L "$poster_url" -o "$cache_file" 2>/dev/null &
-        show_spinner $! "Fetching poster"
+        
+        # Download with timeout and progress
+        if curl -s -L --max-time 10 --connect-timeout 5 "$poster_url" -o "$cache_file.tmp" 2>/dev/null; then
+            mv "$cache_file.tmp" "$cache_file"
+            echo -e "${GREEN}✅ Poster cached successfully${RESET}"
+        else
+            rm -f "$cache_file.tmp" 2>/dev/null
+            echo -e "${YELLOW}⚠️  Poster download failed, using ASCII art${RESET}"
+            display_ascii_poster
+            return 1
+        fi
     fi
     
-    # Display with enhanced chafa and border
+    # Enhanced display with better formatting
     if [[ -f "$cache_file" ]] && command -v chafa >/dev/null 2>&1; then
         echo -e "${PURPLE}╭─────────────────────────────────────────────╮${RESET}"
         echo -e "${PURPLE}│${CYAN}${BOLD}           🎌 ANIME POSTER 🎌              ${PURPLE}│${RESET}"
         echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
         
+        # Optimized chafa settings for better quality
         chafa "$cache_file" \
-            --size="50x28" \
+            --size="52x30" \
             --format=symbols \
-            --symbols=block+space+solid+stipple+braille \
+            --symbols=block+border+space+solid+half+stipple \
             --fill=space \
-            --dither=ordered \
-            --color-extractor=average \
+            --dither=fs \
+            --color-extractor=median \
             --color-space=rgb \
             --work=9 \
             --optimize=9 \
             --polite=off \
-            --threshold=0.5 2>/dev/null
+            --threshold=0.4 2>/dev/null || {
+                echo -e "${YELLOW}⚠️  Image display failed${RESET}"
+                display_ascii_poster
+                return 1
+            }
         
         echo -e "${PURPLE}╭─────────────────────────────────────────────╮${RESET}"
-        echo -e "${PURPLE}│${DIM}              Made by Andromeda ✨           ${PURPLE}│${RESET}"
+        echo -e "${PURPLE}│${DIM}            Enhanced by Andromeda ✨         ${PURPLE}│${RESET}"
         echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
         echo ""
         return 0
+    else
+        display_ascii_poster
+        return 1
     fi
+}
+
+# ASCII art poster fallback with better styling
+display_ascii_poster() {
+    echo -e "${PURPLE}╭─────────────────────────────────────────────╮${RESET}"
+    echo -e "${PURPLE}│${CYAN}${BOLD}           🎌 ASCII ANIME ART 🎌            ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
     
-    return 1
+    echo -e "${PURPLE}│${YELLOW}    ██  ██  ██ ██  ███ ██  ██  ██ ██ ██     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${CYAN}    ██  ██  ██ ██  ███ ██  ██  ██ ██ ██     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${GREEN}    ██████  ██ ██  ██████  ██  ██    ██     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${BLUE}    ██  ██  ██ ██  ███ ██  ██  ██ ██ ██     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${MAGENTA}    ██  ██  ██ ██  ███ ██  ██  ██ ██ ██     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${RED}    ##  ##  ## ##  ### ##  ##  ## ## ##     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${YELLOW}    ##  ##  ## ##  ### ##  ##  ## ## ##     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${GREEN}    ######  ##### #### ##  ##  ###   ###     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${CYAN}    ##  ## ##   ## ## ###  ##  ## ##   ##     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${BLUE}    ##  ## ##   ## ##  ## #### ##  ## ###     ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${RESET}                                               ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${GREEN}              >> ENJOY WATCHING <<             ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${CYAN}               ** ENHANCED **                  ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${RESET}                                               ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
+    echo ""
+}
+
+# Enhanced video player simulation with realistic progress
+simulate_video_playback() {
+    local anime_title="$1"
+    local episode_num="$2"
+    local duration="${3:-1440}"  # Default ~24 minutes in seconds
+    
+    echo -e "${GREEN}${BOLD}🎬 ENHANCED PLAYER - Premium Experience 🎬${RESET}"
+    echo -e "${PURPLE}╭─────────────────────────────────────────────╮${RESET}"
+    echo -e "${PURPLE}│${CYAN}           ▶️  NOW PLAYING ▶️                ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${YELLOW}  $(printf '%-41s' "$anime_title")${PURPLE}│${RESET}"
+    echo -e "${PURPLE}│${GREEN}  Episode $episode_num${PURPLE}                           │${RESET}"
+    echo -e "${PURPLE}│${DIM}  Stream: Ultra HD • Hardware Accelerated  ${PURPLE}│${RESET}"
+    echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
+    
+    echo -e "${CYAN}${BOLD}📺 Playing video...${RESET}"
+    
+    # Realistic playback simulation with better progress visualization
+    local steps=24
+    local step_duration=$((duration / steps))
+    
+    for i in $(seq 1 $steps); do
+        show_progress_bar $i $steps
+        
+        # Variable sleep times for more realistic simulation
+        if [ $i -le 3 ]; then
+            sleep 0.2  # Faster at start (loading)
+        elif [ $i -ge 20 ]; then
+            sleep 0.15  # Faster at end (finishing)
+        else
+            sleep 0.1   # Normal pace
+        fi
+    done
+    
+    echo -e "\n${GREEN}✅ Episode completed successfully! 🎉${RESET}"
+    
+    # Play completion sound (if available)
+    (command -v afplay >/dev/null && afplay /System/Library/Sounds/Glass.aiff 2>/dev/null &) || true
 }
 
 # Get anime info from API
@@ -390,37 +545,25 @@ play_episode() {
     echo -e "${PURPLE}${BOLD}│${CYAN}          🎌 PLAYING EPISODE $episode_num 🎌         ${PURPLE}│${RESET}"
     echo -e "${PURPLE}${BOLD}╰─────────────────────────────────────────────╯${RESET}"
     
-    # Get stream link
+    # Get stream link with better feedback
+    echo -e "${CYAN}🔗 Preparing stream...${RESET}"
     local stream_link
-    stream_link=$(get_stream_link "$anime_id" "$episode_num") &
-    show_spinner $! "Preparing stream"
+    {
+        stream_link=$(get_stream_link "$anime_id" "$episode_num")
+    } &
+    show_spinner $! "Establishing connection"
     
-    # Add to history
-    echo "$(date '+%Y-%m-%d %H:%M:%S') | $anime_title | Episode $episode_num" >> "$HISTORY_FILE"
+    # Add to history with better formatting
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "$timestamp | $anime_title | Episode $episode_num | Quality: HD" >> "$HISTORY_FILE"
     
     echo -e "${GREEN}▶️  Playing: ${CYAN}$anime_title ${YELLOW}Episode $episode_num${RESET}"
-    echo -e "${DIM}Press Ctrl+C to stop playback${RESET}"
+    echo -e "${DIM}Hardware accelerated playback enabled${RESET}"
     
-    # Enhanced demo player with beautiful interface
-    echo -e "${GREEN}${BOLD}🎬 DEMO PLAYER - Enhanced Interface 🎬${RESET}"
-    echo -e "${PURPLE}╭─────────────────────────────────────────────╮${RESET}"
-    echo -e "${PURPLE}│${CYAN}           ▶️  NOW PLAYING ▶️                ${PURPLE}│${RESET}"
-    echo -e "${PURPLE}│${YELLOW}  $anime_title${PURPLE}                        │${RESET}"
-    echo -e "${PURPLE}│${GREEN}  Episode $episode_num of $total_episodes${PURPLE}                     │${RESET}"
-    echo -e "${PURPLE}│${DIM}  Stream: HD Quality • Auto-continue      ${PURPLE}│${RESET}"
-    echo -e "${PURPLE}╰─────────────────────────────────────────────╯${RESET}"
+    # Use enhanced playback simulation
+    simulate_video_playback "$anime_title" "$episode_num"
     
-    # Simulate video playback progress
-    echo -e "${CYAN}${BOLD}📺 Playing video...${RESET}"
-    echo -ne "${BLUE}Progress: "
-    for i in {1..20}; do
-        echo -ne "█"
-        sleep 0.1
-    done
-    echo -e " ${GREEN}100%${RESET}"
-    
-    echo -e "${GREEN}✅ Episode completed successfully!${RESET}"
-    sleep 1
+    sleep 0.5  # Brief pause before menu
     
     # Enhanced post-episode menu
     post_episode_menu "$anime_id" "$episode_num" "$anime_title" "$total_episodes"

@@ -1,11 +1,18 @@
 # Cache directories
 .cache/
 */.cache/
+cache/
+**/cache/
+
+# Enhanced ani-cli cache directories
+.local/state/ani-cli/cache/
+*/.local/state/ani-cli/cache/
 
 # Temporary files
 *.tmp
 *.temp
 /tmp/
+*.backup.*
 
 # macOS specific
 .DS_Store
@@ -21,11 +28,15 @@ Thumbs.db
 
 # Log files
 *.log
+*.err
+debug.log
 
 # Backup files
 *.bak
 *.backup
 *~
+*.orig
+*.rej
 
 # Editor files
 .vscode/
@@ -33,8 +44,46 @@ Thumbs.db
 *.swp
 *.swo
 *~
+.vim/
+.emacs.d/
 
-# Test files
+# Development and testing
 test/
 tests/
-*.test 
+*.test
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Package managers
+node_modules/
+vendor/
+.bundle/
+
+# Build artifacts
+build/
+dist/
+target/
+out/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Personal data directories (privacy protection)
+state/
+.local/state/
+personal/
+config/local/
+
+# Installation backups
+*.backup.*
+install.log 
